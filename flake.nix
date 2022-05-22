@@ -82,24 +82,19 @@
         mkIACollection = base @ {
           collection,
           override ? {},
-          meta ? {},
           __impure ? false,
           hash ? null,
           ...
         }:
-          final.stdenvNoCC.mkDerivation ((removeAttrs base ["override" "hash"])
-          // {
-
-          } // rec {
+          final.stdenvNoCC.mkDerivation (std.recursiveUpdate (removeAttrs base ["override" "hash"])
+            rec {
               name = base.pname or collection;
               src = final.fetchIAMetadata {inherit collection __impure hash;};
-              meta =
-                base.meta
-                // {
-                  inherit (src) description;
-                  maintainers = [src.uploader];
-                  homepage = "https://archive.org/details/${name}";
-                };
+              meta = {
+                inherit (src) description;
+                maintainers = [src.uploader];
+                homepage = "https://archive.org/details/${name}";
+              };
               passthru =
                 std.foldl
                 (acc: file:
