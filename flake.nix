@@ -88,11 +88,13 @@
           ...
         }:
           final.stdenvNoCC.mkDerivation ((removeAttrs base ["override" "hash"])
-            // rec {
+          // {
+
+          } // rec {
               name = base.pname or collection;
               src = final.fetchIAMetadata {inherit collection __impure hash;};
               meta =
-                meta
+                base.meta
                 // {
                   inherit (src) description;
                   maintainers = [src.uploader];
